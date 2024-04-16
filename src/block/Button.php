@@ -25,6 +25,7 @@ namespace pocketmine\block;
 
 use pocketmine\block\utils\AnyFacingTrait;
 use pocketmine\data\runtime\RuntimeDataDescriber;
+use pocketmine\event\block\ButtonUpdateEvent;
 use pocketmine\item\Item;
 use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
@@ -68,6 +69,8 @@ abstract class Button extends Flowable{
 			$world->setBlock($this->position, $this);
 			$world->scheduleDelayedBlockUpdate($this->position, $this->getActivationTime());
 			$world->addSound($this->position->add(0.5, 0.5, 0.5), new RedstonePowerOnSound());
+
+			(new ButtonUpdateEvent($this))->call();
 		}
 
 		return true;
@@ -79,6 +82,8 @@ abstract class Button extends Flowable{
 			$world = $this->position->getWorld();
 			$world->setBlock($this->position, $this);
 			$world->addSound($this->position->add(0.5, 0.5, 0.5), new RedstonePowerOffSound());
+
+			(new ButtonUpdateEvent($this))->call();
 		}
 	}
 
